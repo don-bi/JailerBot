@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.utils import get
 import os
 import random
-from lists import *
+from lists import campquote
 
 client = commands.Bot(command_prefix = '|')
 
@@ -13,12 +13,12 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message, member : discord.Member):
+async def on_message(message):
   if message.author == client.user:
     return
 
   if str(message.channel) == 're-education-camp':
-    await message.channel.send(random.choice(campquote(member)))
+    await message.channel.send(random.choice(campquote(message.author)))
 
   await client.process_commands(message)
 
@@ -44,6 +44,7 @@ async def imprison(ctx, member : discord.Member): #Imprison command
     
     for role in roles:
       await member.remove_roles(role)
+    await member.add_roles(get(ctx.guild.roles, name='p'))
     await ctx.channel.send(f'@{member} has been imprisoned.')
 
   else:
@@ -64,6 +65,7 @@ async def free(ctx, member : discord.Member): #Free command
 
     for role in roles:
       await member.add_roles(role)
+    await member.remove_roles(get(ctx.guild.roles, name='p'))
     await ctx.channel.send(f'@{member} has been freed.')
 
   else:
