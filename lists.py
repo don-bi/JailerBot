@@ -1,0 +1,3 @@
+
+def campquote(member):
+  return 

@@ -2,6 +2,8 @@ import discord
 from discord.ext import commands
 from discord.utils import get
 import os
+import random
+from lists import *
 
 client = commands.Bot(command_prefix = '|')
 
@@ -11,16 +13,16 @@ async def on_ready():
 
 
 @client.event
-async def on_message(message):
+async def on_message(message, member : discord.Member):
   if message.author == client.user:
     return
 
-  if message.content.startswith('|name'):
-    await message.channel.send(message.author.name)
+  if str(message.channel) == 're-education-camp':
+    await message.channel.send(random.choice(campquote(member)))
 
   await client.process_commands(message)
 
-def findhighestrole(ctx, member):
+def findhighestrole(ctx, member): #Function to find highestrole
   highestrole = ''
   for roles in ctx.guild.roles:
     for roles2 in member.roles:
@@ -29,36 +31,41 @@ def findhighestrole(ctx, member):
   return highestrole
 
 @client.command(pass_context=True)
-async def imprison(ctx, member : discord.Member):
+async def imprison(ctx, member : discord.Member): #Imprison command
+  authorhighestrole = findhighestrole(ctx, ctx.author)
+  memberhighestrole = findhighestrole(ctx, member)
+
   if str(ctx.author) == 'manspider011#6289':
     await ctx.channel.send('idiot manspider')
     return
 
-  if findhighestrole(ctx, ctx.author) > findhighestrole(ctx, member):
-    memberrole = get(ctx.guild.roles, name='member')
-    role = get(ctx.guild.roles, name='.')
-    stuy = get(ctx.guild.roles, name='stuy')
-    await member.remove_roles(memberrole)
-    await member.remove_roles(role)
-    await member.remove_roles(stuy)
+  if (authorhighestrole > memberhighestrole) or (authorhighestrole == memberhighestrole and str(ctx.author) == 'manspider011#6289'):
+    roles = [get(ctx.guild.roles, name='member'), get(ctx.guild.roles, name='.'), get(ctx.guild.roles, name='stuy')]
+    
+    for role in roles:
+      await member.remove_roles(role)
     await ctx.channel.send(f'@{member} has been imprisoned.')
+
   else:
     await ctx.channel.send(f'Your permissions are not high enough to imprison @{member}.')
 
 @client.command(pass_context=True)
-async def free(ctx, member : discord.Member):
+async def free(ctx, member : discord.Member): #Free command
+  authorhighestrole = findhighestrole(ctx, ctx.author)
+  memberhighestrole = findhighestrole(ctx, member)
+
   if str(ctx.author) == 'manspider011#6289':
     await ctx.channel.send('idiot manspider')
     return
 
-  if findhighestrole(ctx, ctx.author) > findhighestrole(ctx, member):
-    memberrole = get(ctx.guild.roles, name='member')
-    role = get(ctx.guild.roles, name='.')
-    stuy = get(ctx.guild.roles, name='stuy')
-    await member.add_roles(memberrole)
-    await member.add_roles(role)
-    await member.add_roles(stuy)
+  if (authorhighestrole > memberhighestrole) or (authorhighestrole == memberhighestrole and str(ctx.author) == 'manspider011#6289'):
+
+    roles = [get(ctx.guild.roles, name='member'), get(ctx.guild.roles, name='.'), get(ctx.guild.roles, name='stuy')]
+
+    for role in roles:
+      await member.add_roles(role)
     await ctx.channel.send(f'@{member} has been freed.')
+
   else:
     await ctx.channel.send(f'Your permissions are not high enough to free @{member}.')
 
