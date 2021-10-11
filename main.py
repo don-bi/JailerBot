@@ -15,10 +15,6 @@ async def on_message(message):
   if message.author == client.user:
     return
 
-  if message.content.startswith("|eee"):
-    mentioned = message.mentions
-    await message.channel.send(mentioned)
-
   if message.content.startswith('|name'):
     await message.channel.send(message.author.name)
 
@@ -34,6 +30,10 @@ def findhighestrole(ctx, member):
 
 @client.command(pass_context=True)
 async def imprison(ctx, member : discord.Member):
+  if str(ctx.author) == 'manspider011#6289':
+    await ctx.channel.send('idiot manspider')
+    return
+
   if findhighestrole(ctx, ctx.author) > findhighestrole(ctx, member):
     memberrole = get(ctx.guild.roles, name='member')
     role = get(ctx.guild.roles, name='.')
@@ -47,6 +47,10 @@ async def imprison(ctx, member : discord.Member):
 
 @client.command(pass_context=True)
 async def free(ctx, member : discord.Member):
+  if str(ctx.author) == 'manspider011#6289':
+    await ctx.channel.send('idiot manspider')
+    return
+
   if findhighestrole(ctx, ctx.author) > findhighestrole(ctx, member):
     memberrole = get(ctx.guild.roles, name='member')
     role = get(ctx.guild.roles, name='.')
