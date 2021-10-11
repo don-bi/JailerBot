@@ -4,6 +4,7 @@ from discord.utils import get
 import os
 import random
 from lists import campquote
+from keepalive import keep_alive
 
 client = commands.Bot(command_prefix = '|')
 
@@ -71,5 +72,5 @@ async def free(ctx, member : discord.Member): #Free command
   else:
     await ctx.channel.send(f'Your permissions are not high enough to free @{member}.')
 
-
+keep_alive()
 client.run(os.environ['TOKEN'])
